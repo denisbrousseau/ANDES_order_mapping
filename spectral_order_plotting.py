@@ -33,6 +33,7 @@ def plot_order_traces(orders, detector_half=30.7):
         x2 = group['X2'].values
         y2 = group['Y2'].values
         wavelengths = group['Wavelength (nm)'].values
+        sampling = group['Sampling (pixels)'].values
 
         # Build filled polygon: bottom edge (X1,Y1) forward, top edge (X2,Y2) reversed
         poly_x = np.concatenate([x1, x2[::-1]])
@@ -47,12 +48,24 @@ def plot_order_traces(orders, detector_half=30.7):
                 ha='left', va='center', fontsize=9, fontweight='bold',
                 color='black', zorder=5)
 
-        # 5 wavelength labels evenly spaced along the order
+        # 5 wavelength labels + slit lines evenly spaced along the order
         indices = np.linspace(0, len(group) - 1, 5).astype(int)
         for idx in indices:
-            ax.text(x0[idx], y0[idx], f'{wavelengths[idx]:.1f}',
-                    ha='center', va='center', fontsize=9, color='black',
-                    zorder=5)
+            # Bold slit line from lower to upper edge
+            ax.plot([x1[idx], x2[idx]], [y1[idx], y2[idx]],
+                    color='black', linewidth=2, solid_capstyle='round', zorder=4)
+            # Wavelength and slit width labels: left side for rightmost position, right for others
+            y_mid = y0[idx]
+            if idx == indices[-1]:
+                x_label = (x1[idx] + x2[idx]) / 2 - 0.3
+                ha = 'right'
+            else:
+                x_label = (x1[idx] + x2[idx]) / 2 + 0.3
+                ha = 'left'
+            ax.text(x_label, y_mid + 0.5, f'{wavelengths[idx]:.1f}',
+                    ha=ha, va='center', fontsize=9, color='black', zorder=5)
+            ax.text(x_label, y_mid - 0.5, f'({sampling[idx]:.2f})',
+                    ha=ha, va='center', fontsize=8, color='black', zorder=5)
 
     # Detector boundary
     rect = Rectangle((-detector_half, -detector_half),
