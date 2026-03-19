@@ -3,6 +3,9 @@ ANDES Order Mapping
 Parses and visualizes spectral order traces on a detector.
 """
 
+import sys
+import os
+import re
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon, Rectangle
@@ -17,7 +20,7 @@ def parse_order_file(filepath):
     return orders
 
 
-def plot_order_traces(orders, detector_half=30.7):
+def plot_order_traces(orders, title, output_path, detector_half=30.7):
     fig, ax = plt.subplots(figsize=(12, 12), facecolor='white')
     ax.set_facecolor('white')
 
@@ -85,19 +88,33 @@ def plot_order_traces(orders, detector_half=30.7):
     ax.tick_params(labelsize=9)
     ax.set_xlabel('X (mm)', fontsize=12)
     ax.set_ylabel('Y (mm)', fontsize=12)
-    ax.set_title('ANDES YS H-band R4 V35 — Spectral Order Traces', fontsize=14)
+    ax.set_title(title, fontsize=14)
     ax.grid(True, alpha=0.3, linestyle='--', linewidth=0.5, zorder=1)
 
     plt.tight_layout()
-    plt.savefig('order_map.png', dpi=150, bbox_inches='tight')
+    plt.savefig(output_path, dpi=150, bbox_inches='tight')
     plt.show()
 
 
+def derive_title_and_output(filepath):
+    name = os.path.basename(filepath)
+    m = re.match(r'ANDES_(YS)_(\w+)_R4_V35_orders\.txt', name)
+    if m:
+        band = m.group(2)
+        title = f'ANDES YS {band}-band R4 V35 — Spectral Order Traces'
+        output = os.path.join(os.path.dirname(filepath), f'order_map_{band}.png')
+    else:
+        title = name.replace('_orders.txt', '').replace('_', ' ')
+        output = os.path.join(os.path.dirname(filepath), name.replace('.txt', '.png'))
+    return title, output
+
+
 def main():
-    filepath = 'ANDES_YS_H_R4_V35_orders.txt'
+    filepath = sys.argv[1] if len(sys.argv) > 1 else 'ANDES_YS_H_R4_V35_orders.txt'
     orders = parse_order_file(filepath)
     print(f"Loaded {len(orders)} spectral orders: {sorted(orders.keys())}")
-    plot_order_traces(orders)
+    title, output_path = derive_title_and_output(filepath)
+    plot_order_traces(orders, title, output_path)
 
 
 if __name__ == "__main__":
