@@ -9,7 +9,8 @@ Visualization tool for spectral order traces of the ANDES spectrograph (H-band, 
 The script produces a plot with:
 - **Filled order traces** showing the physical footprint of each spectral order on the detector
 - **Order numbers** labeled to the right of the detector boundary
-- **Wavelength labels** (5 evenly spaced along each order) in nm
+- **Slit lines** drawn as bold lines at 5 evenly spaced positions along each order
+- **Wavelength labels** (nm) and **slit width in pixels** beside each slit line
 - **Detector boundary** drawn as a 30.7 mm × 30.7 mm square
 - **X/Y tick marks** in mm
 
@@ -24,6 +25,7 @@ The order mapping file is a tab-separated text file with the following columns:
 | `X0`, `Y0` | Center trace coordinates (mm) |
 | `X1`, `Y1` | Lower edge coordinates (mm) |
 | `X2`, `Y2` | Upper edge coordinates (mm) |
+| `Sampling (pixels)` | Slit width at the detector plane (pixels) |
 
 Each order contains multiple rows sampling the trace along the dispersion direction. The filled polygon for each order is constructed from the lower edge (`X1`, `Y1`) and upper edge (`X2`, `Y2`) coordinate sequences.
 
