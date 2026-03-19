@@ -1,0 +1,91 @@
+"""
+ANDES Order Mapping
+Parses and visualizes spectral order traces on a detector.
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon, Rectangle
+import pandas as pd
+
+
+def parse_order_file(filepath):
+    df = pd.read_csv(filepath, sep='\t')
+    orders = {}
+    for order_num, group in df.groupby('ORDER'):
+        orders[order_num] = group.reset_index(drop=True)
+    return orders
+
+
+def plot_order_traces(orders, detector_half=30.7):
+    fig, ax = plt.subplots(figsize=(12, 12), facecolor='white')
+    ax.set_facecolor('white')
+
+    order_list = sorted(orders.keys())
+
+    for order_num in order_list:
+        group = orders[order_num]
+
+        x0 = group['X0'].values
+        y0 = group['Y0'].values
+        x1 = group['X1'].values
+        y1 = group['Y1'].values
+        x2 = group['X2'].values
+        y2 = group['Y2'].values
+        wavelengths = group['Wavelength (nm)'].values
+
+        # Build filled polygon: bottom edge (X1,Y1) forward, top edge (X2,Y2) reversed
+        poly_x = np.concatenate([x1, x2[::-1]])
+        poly_y = np.concatenate([y1, y2[::-1]])
+        patch = Polygon(np.column_stack([poly_x, poly_y]),
+                        closed=True, facecolor='lightgray', alpha=0.8,
+                        edgecolor='gray', linewidth=0.8, zorder=2)
+        ax.add_patch(patch)
+
+        # Order number label at the far right of the plot
+        ax.text(detector_half + 0.8, y0[len(group) // 2], str(order_num),
+                ha='left', va='center', fontsize=9, fontweight='bold',
+                color='black', zorder=5)
+
+        # 5 wavelength labels evenly spaced along the order
+        indices = np.linspace(0, len(group) - 1, 5).astype(int)
+        for idx in indices:
+            ax.text(x0[idx], y0[idx], f'{wavelengths[idx]:.1f}',
+                    ha='center', va='center', fontsize=9, color='black',
+                    zorder=5)
+
+    # Detector boundary
+    rect = Rectangle((-detector_half, -detector_half),
+                     2 * detector_half, 2 * detector_half,
+                     linewidth=2, edgecolor='black', facecolor='white', zorder=0)
+    ax.add_patch(rect)
+
+    # Axis limits, ticks, labels
+    margin = 1.5
+    ax.set_xlim(-detector_half - margin, detector_half + 4)
+    ax.set_ylim(-detector_half - margin, detector_half + margin)
+    ax.set_aspect('equal')
+
+    ticks = np.arange(-30, 31, 5)
+    ax.set_xticks(ticks)
+    ax.set_yticks(ticks)
+    ax.tick_params(labelsize=9)
+    ax.set_xlabel('X (mm)', fontsize=12)
+    ax.set_ylabel('Y (mm)', fontsize=12)
+    ax.set_title('ANDES YS H-band R4 V35 — Spectral Order Traces', fontsize=14)
+    ax.grid(True, alpha=0.3, linestyle='--', linewidth=0.5, zorder=1)
+
+    plt.tight_layout()
+    plt.savefig('order_map.png', dpi=150, bbox_inches='tight')
+    plt.show()
+
+
+def main():
+    filepath = 'ANDES_YS_H_R4_V35_orders.txt'
+    orders = parse_order_file(filepath)
+    print(f"Loaded {len(orders)} spectral orders: {sorted(orders.keys())}")
+    plot_order_traces(orders)
+
+
+if __name__ == "__main__":
+    main()
