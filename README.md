@@ -1,6 +1,6 @@
 # ANDES Order Mapping
 
-Visualization tool for spectral order traces of the ANDES spectrograph (H-band, R4 grating, V35 configuration).
+Visualization tool for spectral order traces of the ANDES spectrograph (R4 grating, V35 configuration). Supports H, J, and Y bands.
 
 ## Description
 
@@ -31,11 +31,15 @@ Each order contains multiple rows sampling the trace along the dispersion direct
 
 ## Usage
 
+Pass the input file as a command-line argument:
+
 ```bash
-python spectral_order_plotting.py
+python spectral_order_plotting.py ANDES_YS_H_R4_V35_orders.txt
+python spectral_order_plotting.py ANDES_YS_J_R4_V35_orders.txt
+python spectral_order_plotting.py ANDES_YS_Y_R4_V35_orders.txt
 ```
 
-The plot is displayed interactively and saved as `order_map.png` in the working directory.
+The plot title and output filename are derived automatically from the input filename (e.g., `order_map_H.png`). The plot is also displayed interactively.
 
 ## Dependencies
 
@@ -43,6 +47,10 @@ The plot is displayed interactively and saved as `order_map.png` in the working 
 pip install numpy matplotlib pandas
 ```
 
-## Output
+## Available Data Files
 
-The plot covers orders 68–83 of the H-band, spanning approximately 1452–1797 nm across a 61.4 mm × 61.4 mm detector area (coordinates ranging from ±30.7 mm).
+| File | Band | Orders | Wavelength range |
+|------|------|--------|-----------------|
+| `ANDES_YS_H_R4_V35_orders.txt` | H | 68–83 | ~1452–1796 nm |
+| `ANDES_YS_J_R4_V35_orders.txt` | J | 90–108 | ~1117–1355 nm |
+| `ANDES_YS_Y_R4_V35_orders.txt` | Y | 109–127 | ~951–1118 nm |
