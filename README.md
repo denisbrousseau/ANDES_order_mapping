@@ -54,3 +54,14 @@ pip install numpy matplotlib pandas
 | `ANDES_YS_H_R4_V35_orders.txt` | H | 68–83 | ~1452–1796 nm |
 | `ANDES_YS_J_R4_V35_orders.txt` | J | 90–108 | ~1117–1355 nm |
 | `ANDES_YS_Y_R4_V35_orders.txt` | Y | 109–127 | ~951–1118 nm |
+
+## Output
+
+### H Band (orders 68–83, ~1452–1796 nm)
+![H Band Order Map](order_map_H.png)
+
+### J Band (orders 90–108, ~1117–1355 nm)
+![J Band Order Map](order_map_J.png)
+
+### Y Band (orders 109–127, ~951–1118 nm)
+![Y Band Order Map](order_map_Y.png)
