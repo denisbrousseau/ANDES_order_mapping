@@ -10,7 +10,7 @@ The script produces a plot with:
 - **Filled order traces** showing the physical footprint of each spectral order on the detector
 - **Order numbers** labeled to the right of the detector boundary
 - **Slit lines** drawn as bold lines at 5 evenly spaced positions along each order
-- **Wavelength labels** (nm) and **slit width in pixels** beside each slit line
+- **Wavelength labels** (nm) beside each slit line, with the number in parentheses below indicating the geometric sampling in pixels for a 15 µm pixel size
 - **Detector boundary** drawn as a 30.7 mm × 30.7 mm square
 - **X/Y tick marks** in mm
 
