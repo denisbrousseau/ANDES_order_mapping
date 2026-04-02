@@ -37,6 +37,7 @@ def plot_order_traces(orders, title, output_path, detector_half=30.7):
         y2 = group['Y2'].values
         wavelengths = group['Wavelength (nm)'].values
         sampling = group['Sampling (pixels)'].values
+        resolution = group['R'].values if 'R' in group.columns else None
 
         # Build filled polygon: bottom edge (X1,Y1) forward, top edge (X2,Y2) reversed
         poly_x = np.concatenate([x1, x2[::-1]])
@@ -67,8 +68,12 @@ def plot_order_traces(orders, title, output_path, detector_half=30.7):
                 ha = 'left'
             ax.text(x_label, y_mid + 0.5, f'{wavelengths[idx]:.1f}',
                     ha=ha, va='center', fontsize=9, color='black', zorder=5)
-            ax.text(x_label, y_mid - 0.5, f'({sampling[idx]:.2f})',
+            ax.text(x_label, y_mid - 0.3, f'({sampling[idx]:.2f})',
                     ha=ha, va='center', fontsize=8, color='black', zorder=5)
+            if resolution is not None:
+                ax.text(x_label, y_mid - 1.1, f'R={resolution[idx]:,}',
+                        ha=ha, va='center', fontsize=8, color='dimgray',
+                        fontweight='bold', zorder=5)
 
     # Detector boundary
     rect = Rectangle((-detector_half, -detector_half),
