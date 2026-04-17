@@ -108,9 +108,16 @@ def derive_title_and_output(filepath):
         band = m.group(2)
         title = f'ANDES YS {band}-band R4 V35 — Spectral Order Traces'
         output = os.path.join(os.path.dirname(filepath), f'order_map_{band}.png')
-    else:
-        title = name.replace('_orders.txt', '').replace('_', ' ')
-        output = os.path.join(os.path.dirname(filepath), name.replace('.txt', '.png'))
+        return title, output
+    m = re.match(r'ANDES_(V\d+)_(\w)band_orders\.txt', name)
+    if m:
+        version = m.group(1)
+        band = m.group(2)
+        title = f'ANDES {version} {band}-band — Spectral Order Traces'
+        output = os.path.join(os.path.dirname(filepath), f'order_map_{version}_{band}.png')
+        return title, output
+    title = name.replace('_orders.txt', '').replace('_', ' ')
+    output = os.path.join(os.path.dirname(filepath), name.replace('.txt', '.png'))
     return title, output
 
 
