@@ -3,7 +3,7 @@ import os, sys, shutil
 from scipy.optimize import curve_fit
 
 ANDES_DIR   = "/Users/denisbrousseau/Library/CloudStorage/OneDrive-UniversitéLaval/Projets en cours/ANDES"
-PSF_PITCH_MM = 0.005
+IMG_PITCH_MM = 0.005
 SENSOR_PX_MM = 0.015
 
 data_dir = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ANDES_DIR, "data")
@@ -11,8 +11,8 @@ xy_file  = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ANDES_DIR, "ANDES_
 
 # ---------- helpers ----------------------------------------------------------
 
-def load_psf(path):
-    """Load PSF grid of any square size from a Zemax histogram listing."""
+def load_slit_image(path):
+    """Load slit image grid of any square size from a Zemax histogram listing."""
     rows = []
     n_cols = None
     with open(path, "r", encoding="utf-8", errors="replace") as f:
@@ -38,8 +38,8 @@ def fit_lsf(lsf):
     p0 = [lsf.max(), x[np.argmax(lsf)], 2.0, lsf.min()]
     popt, _ = curve_fit(gaussian, x, lsf, p0=p0, maxfev=10000)
     sigma    = abs(popt[2])
-    fwhm_psf = 2.0 * np.sqrt(2.0 * np.log(2.0)) * sigma
-    return fwhm_psf * PSF_PITCH_MM / SENSOR_PX_MM
+    fwhm_img = 2.0 * np.sqrt(2.0 * np.log(2.0)) * sigma
+    return fwhm_img * IMG_PITCH_MM / SENSOR_PX_MM
 
 def parse_name(stem):
     if not stem.startswith("R"):
@@ -58,7 +58,7 @@ def parse_name(stem):
         return order1, field1
     return None, None
 
-# ---------- step 1: compute FWHM from PSF files ------------------------------
+# ---------- step 1: compute FWHM from slit image files -----------------------
 
 fwhm_dict = {}
 failed    = []
@@ -68,17 +68,17 @@ for fname in sorted(os.listdir(data_dir)):
     order, field = parse_name(fname[:-4])
     if order is None:
         continue
-    psf = load_psf(os.path.join(data_dir, fname))
-    if psf.shape[0] == 0:
+    img = load_slit_image(os.path.join(data_dir, fname))
+    if img.shape[0] == 0:
         failed.append(fname)
         continue
-    lsf = psf.sum(axis=0)
+    lsf = img.sum(axis=0)
     try:
         fwhm_dict[(order, field)] = fit_lsf(lsf)
     except Exception as e:
         failed.append(f"{fname}: {e}")
 
-print(f"PSF files processed: {len(fwhm_dict)} ok, {len(failed)} failed")
+print(f"Slit image files processed: {len(fwhm_dict)} ok, {len(failed)} failed")
 
 # ---------- step 2: read XY file, assign field index by row order ------------
 
@@ -145,7 +145,7 @@ with open(xy_file, "w") as f:
 print(f"Updated: {xy_file}")
 print(f"Columns added: FWHM (px), R_geo, R_fwhm")
 if missing:
-    print(f"  WARNING: {missing} rows had no matching PSF or zero dispersion")
+    print(f"  WARNING: {missing} rows had no matching slit image or zero dispersion")
 
 # ---------- summary ----------------------------------------------------------
 

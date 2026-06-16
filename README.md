@@ -12,7 +12,7 @@ End-to-end pipeline for generating and visualizing spectral order maps of the [A
                  │
         ┌────────┴────────┐
         ▼                 ▼
-  PSF files          XY data file
+  slit image files   XY data file
 R{order}{step}.txt  ANDES_V36_H_XY.txt
   (GIA output)     (PRINT output, 9 cols)
         │                 │
@@ -50,7 +50,7 @@ R{order}{step}.txt  ANDES_V36_H_XY.txt
    - slit top edge `(x2, y2)`
    - slit left/right lateral edges `(xl, xr)` at ±0.013352 field units
 3. Computes the **geometric slit width in detector pixels**: `dx = (xl − xr) / 0.015 mm`
-4. Runs **Geometric Image Analysis** (GIA) and saves the PSF histogram as `R{order}{step}.txt`
+4. Runs **Geometric Image Analysis** (GIA) and saves the slit image histogram as `R{order}{step}.txt`
 5. Prints one data row to stdout: `order  λ(nm)  x0  y0  x1  y1  x2  y2  dx`
 
 ### Grating parameters
@@ -75,7 +75,7 @@ R{order}{step}.txt  ANDES_V36_H_XY.txt
 3. Open the macro editor (**Tools → Macros → Edit/Run ZPL**), load `ANDES_IMA.ZPL`, and run
 4. Redirect the PRINT output to the XY data file (e.g. `ANDES_V36_H_XY.txt`)
 
-The PSF files (`R{order}{step}.txt`) are saved directly to the directory set in the macro.
+The slit image files (`R{order}{step}.txt`) are saved directly to the directory set in the macro.
 
 ### Output format
 
@@ -90,7 +90,7 @@ The PSF files (`R{order}{step}.txt`) are saved directly to the directory set in 
 | 7–8 | X2, Y2 | mm | Slit top edge |
 | 9 | Geo. sampling | px | Geometric slit width in detector pixels |
 
-**PSF files** — Zemax GIA histogram listings, one per (order, step). The grid is square (50×50 for H-band), tab-separated, with a multi-line header followed by the intensity array. File naming: `R{order}{step}.txt` (e.g. `R681.txt` = order 68, step 1).
+**Slit image files** — Zemax GIA histogram listings, one per (order, step). The grid is square (50×50 for H-band), tab-separated, with a multi-line header followed by the intensity array. File naming: `R{order}{step}.txt` (e.g. `R681.txt` = order 68, step 1).
 
 ---
 
@@ -98,12 +98,12 @@ The PSF files (`R{order}{step}.txt`) are saved directly to the directory set in 
 
 ### What it does
 
-For each PSF file in the data directory the script:
+For each slit image file in the data directory the script:
 
 1. Loads the 2-D intensity grid (auto-detects grid size — works for 25×25 and 50×50)
 2. Collapses along the spatial axis to obtain a 1-D **Line Spread Function (LSF)**
 3. Fits a Gaussian to the LSF and converts σ → **FWHM in sensor pixels**  
-   `FWHM_px = 2√(2 ln 2) × σ_psf × (PSF pitch / pixel size) = σ_psf × 0.005 / 0.015`
+   `FWHM_px = 2√(2 ln 2) × σ × (slit image pitch / pixel size) = σ × 0.005 / 0.015`
 4. Reads the XY file, assigning field index by row order within each echelle order group
 5. Computes spectral **dispersion** dλ/dX (nm/mm) via `numpy.gradient` on (λ, X0)
 6. Computes spectral resolution for each row:
@@ -115,13 +115,13 @@ For each PSF file in the data directory the script:
 
 | Parameter | Value |
 |-----------|-------|
-| PSF grid pitch | 5 µm (0.005 mm/px) |
+| Slit image grid pitch | 5 µm (0.005 mm/px) |
 | Detector pixel size | 15 µm (0.015 mm/px) |
 
 ### Usage
 
 ```bash
-python add_fwhm_resolution.py <psf_dir> <xy_file>
+python add_fwhm_resolution.py <slit_image_dir> <xy_file>
 ```
 
 Example:
@@ -140,7 +140,7 @@ Three columns are appended:
 |-----|------|-------------|
 | 10 | FWHM | Gaussian LSF FWHM (sensor pixels) |
 | 11 | R_geo | Spectral resolution from geometric slit width |
-| 12 | R_fwhm | Spectral resolution from PSF FWHM |
+| 12 | R_fwhm | Spectral resolution from slit image FWHM |
 
 ---
 

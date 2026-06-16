@@ -32,7 +32,7 @@ def normalize_columns(df):
         if fwhm_col in df.columns:
             df = df.rename(columns={fwhm_col: 'FWHM (pixels)'})
             break
-    # Use FWHM resolution, fall back to geo., then PSF-fit resolution
+    # Use FWHM resolution, fall back to geo., then slit image resolution
     if 'R (FWHM sampling)' in df.columns:
         df = df.rename(columns={'R (FWHM sampling)': 'R'})
     elif 'R (Geo. sampling)' in df.columns:
