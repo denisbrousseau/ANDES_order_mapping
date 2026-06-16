@@ -1,5 +1,6 @@
 *.png
 !order_map_*.png
+!*_sampling_*.png
 __pycache__/
 *.pyc
 .DS_Store
