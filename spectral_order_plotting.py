@@ -307,12 +307,12 @@ def derive_title_and_output(filepath, band=None):
         output = os.path.join(PLOT_DIR, f'order_map_{band}_{version}.png')
         return title, output
     # ANDES_V36_Hband.txt  →  ANDES H-band V36 — Spectral Order Traces
-    m3 = re.match(r'ANDES_(V\d+)_([A-Z])_XY\.txt', name, re.IGNORECASE)
+    m3 = re.match(r'ANDES_(V\d+)_([A-Z])band\.txt', name, re.IGNORECASE)
     if m3:
         version = m3.group(1)
         band    = m3.group(2).upper()
         title   = f'ANDES {band}-band {version} — Spectral Order Traces'
-        output  = os.path.join(PLOT_DIR, f'{version}_sampling_{band}band.png')
+        output  = os.path.join(PLOT_DIR, f'ANDES_{version}_{band}band.png')
         return title, output
     m4 = re.match(r'ANDES_([\w]+)_(V\d+)_(\w+)\.txt', name)
     if m4:

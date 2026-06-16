@@ -32,7 +32,7 @@ R{order}{step}.txt  ANDES_V36_Hband.txt
   │   (detector footprint plot)  │
   └──────────────┬───────────────┘
                  │
-        V36_sampling_Hband.png
+        ANDES_V36_Hband.png
 ```
 
 ---
@@ -184,13 +184,13 @@ python spectral_order_plotting.py ANDES_V36_Hband.txt --wavelength-only
 
 ### Output filename
 
-Derived automatically from the input: `ANDES_V36_Hband.txt` → `V36_sampling_Hband.png`.
+Derived automatically from the input: `ANDES_V36_Hband.txt` → `ANDES_V36_Hband.png`.
 
 ---
 
 ## H-band result (V36 design)
 
-![ANDES H-band V36 spectral order map](V36_sampling_Hband.png)
+![ANDES H-band V36 spectral order map](ANDES_V36_Hband.png)
 
 16 orders (68–83), 1452–1796 nm, 5 sample points per order.  
 Each annotation shows wavelength (nm), geometric sampling (px), and resolution R.
@@ -213,4 +213,4 @@ Requires **Zemax OpticStudio** to run `ANDES_IMA.ZPL`.
 | `add_fwhm_resolution.py` | Gaussian LSF fit + resolution computation |
 | `spectral_order_plotting.py` | Detector footprint visualisation |
 | `ANDES_V36_Hband.txt` | H-band V36 enriched XY data (12 columns) |
-| `V36_sampling_Hband.png` | H-band V36 order map |
+| `ANDES_V36_Hband.png` | H-band V36 order map |
