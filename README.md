@@ -13,7 +13,7 @@ End-to-end pipeline for generating and visualizing spectral order maps of the [A
         ┌────────┴────────┐
         ▼                 ▼
   slit image files   XY data file
-R{order}{step}.txt  ANDES_V36_H_XY.txt
+R{order}{step}.txt  ANDES_V36_Hband.txt
   (GIA output)     (PRINT output, 9 cols)
         │                 │
         └────────┬────────┘
@@ -23,7 +23,7 @@ R{order}{step}.txt  ANDES_V36_H_XY.txt
   │  (Gaussian LSF fit + R calc) │
   └──────────────┬───────────────┘
                  │
-     ANDES_V36_H_XY.txt (12 cols)
+     ANDES_V36_Hband.txt (12 cols)
      + FWHM (px), R_geo, R_fwhm
                  │
                  ▼
@@ -73,7 +73,7 @@ R{order}{step}.txt  ANDES_V36_H_XY.txt
    - `settingFile$` — path to the `.CFG` file for the GIA tool
    - The output directory in the `filename$` construction line
 3. Open the macro editor (**Tools → Macros → Edit/Run ZPL**), load `ANDES_IMA.ZPL`, and run
-4. Redirect the PRINT output to the XY data file (e.g. `ANDES_V36_H_XY.txt`)
+4. Redirect the PRINT output to the XY data file (e.g. `ANDES_V36_Hband.txt`)
 
 The slit image files (`R{order}{step}.txt`) are saved directly to the directory set in the macro.
 
@@ -126,7 +126,7 @@ python add_fwhm_resolution.py <slit_image_dir> <xy_file>
 
 Example:
 ```bash
-python add_fwhm_resolution.py data/ ANDES_V36_H_XY.txt
+python add_fwhm_resolution.py data/ ANDES_V36_Hband.txt
 ```
 
 Both arguments are optional and default to the paths used during development.
@@ -158,20 +158,20 @@ The rightmost annotation per order is placed to the **left** of its slit mark to
 ### Usage
 
 ```bash
-# Default: reads ANDES_V36_H_XY.txt
+# Default: reads ANDES_V36_Hband.txt
 python spectral_order_plotting.py
 
 # Explicit path
-python spectral_order_plotting.py /path/to/ANDES_V36_H_XY.txt
+python spectral_order_plotting.py /path/to/ANDES_V36_Hband.txt
 
 # Multi-band Excel workbook
 python spectral_order_plotting.py ANDES_V36_YJH.xlsx --band H
 
 # Suppress R annotations
-python spectral_order_plotting.py ANDES_V36_H_XY.txt --no-resolution
+python spectral_order_plotting.py ANDES_V36_Hband.txt --no-resolution
 
 # Wavelength labels only, rotated along the trace
-python spectral_order_plotting.py ANDES_V36_H_XY.txt --wavelength-only
+python spectral_order_plotting.py ANDES_V36_Hband.txt --wavelength-only
 ```
 
 ### Input format auto-detection
@@ -184,7 +184,7 @@ python spectral_order_plotting.py ANDES_V36_H_XY.txt --wavelength-only
 
 ### Output filename
 
-Derived automatically from the input: `ANDES_V36_H_XY.txt` → `V36_sampling_Hband.png`.
+Derived automatically from the input: `ANDES_V36_Hband.txt` → `V36_sampling_Hband.png`.
 
 ---
 
@@ -212,5 +212,5 @@ Requires **Zemax OpticStudio** to run `ANDES_IMA.ZPL`.
 | `ANDES_IMA.ZPL` | Zemax macro — ray tracing + GIA |
 | `add_fwhm_resolution.py` | Gaussian LSF fit + resolution computation |
 | `spectral_order_plotting.py` | Detector footprint visualisation |
-| `ANDES_V36_H_XY.txt` | H-band V36 enriched XY data (12 columns) |
+| `ANDES_V36_Hband.txt` | H-band V36 enriched XY data (12 columns) |
 | `V36_sampling_Hband.png` | H-band V36 order map |

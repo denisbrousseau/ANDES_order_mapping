@@ -7,7 +7,7 @@ IMG_PITCH_MM = 0.005
 SENSOR_PX_MM = 0.015
 
 data_dir = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ANDES_DIR, "data")
-xy_file  = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ANDES_DIR, "ANDES_V36_H_XY.txt")
+xy_file  = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ANDES_DIR, "ANDES_V36_Hband.txt")
 
 # ---------- helpers ----------------------------------------------------------
 

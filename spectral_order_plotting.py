@@ -306,7 +306,7 @@ def derive_title_and_output(filepath, band=None):
         title = f'ANDES {band}-band {version} — Spectral Order Traces'
         output = os.path.join(PLOT_DIR, f'order_map_{band}_{version}.png')
         return title, output
-    # ANDES_V36_H_XY.txt  →  ANDES H-band V36 — Spectral Order Traces
+    # ANDES_V36_Hband.txt  →  ANDES H-band V36 — Spectral Order Traces
     m3 = re.match(r'ANDES_(V\d+)_([A-Z])_XY\.txt', name, re.IGNORECASE)
     if m3:
         version = m3.group(1)
@@ -348,7 +348,7 @@ def main():
             if a != '--y-offset' and (i == 0 or args[i - 1] != '--y-offset')]
     XY_DEFAULT = os.path.expanduser(
         "~/Library/CloudStorage/OneDrive-UniversitéLaval"
-        "/Projets en cours/ANDES/ANDES_V36_H_XY.txt"
+        "/Projets en cours/ANDES/ANDES_V36_Hband.txt"
     )
     filepath = args[0] if args else XY_DEFAULT
     # Map band name to sheet name for multi-band xlsx files
